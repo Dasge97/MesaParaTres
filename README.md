@@ -72,6 +72,9 @@ el agente lo lee tal cual, nunca inventa el resultado.
 Incluir siempre `restaurant_id` (variable dinámica del agente) y `call_id`
 (system var de ElevenLabs) para agrupar la auditoría por llamada.
 
+Guía completa de configuración (prompt del agente, schemas de las tools,
+conexión Twilio, checklist): [docs/ELEVENLABS.md](docs/ELEVENLABS.md).
+
 ## Decisiones clave
 
 - **Capacidad por franja**, no mesas: una reserva consume cupo solo en su franja.
