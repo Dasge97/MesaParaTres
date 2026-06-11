@@ -1,0 +1,164 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum ServiceType {
+  lunch
+  dinner
+  general
+}
+
+enum ReservationStatus {
+  pending
+  confirmed
+  cancelled
+  needs_review
+  failed
+}
+
+enum ReservationSource {
+  phone_ai
+  admin
+  manual
+}
+
+enum CalendarSyncStatus {
+  pending
+  synced
+  failed
+  disabled
+}
+
+model Restaurant {
+  id                    String   @id @default(cuid())
+  name                  String
+  phone                 String?
+  timezone              String   @default("Europe/Madrid")
+  default_language      String   @default("es")
+  calendar_id           String?
+  notification_email    String?
+  notification_phone    String?
+  is_ai_enabled         Boolean  @default(true)
+  max_party_size_global Int      @default(12)
+  elevenlabs_agent_id   String?
+  created_at            DateTime @default(now())
+  updated_at            DateTime @updatedAt
+
+  opening_hours      OpeningHours[]
+  availability_rules AvailabilityRule[]
+  blocked_slots      BlockedSlot[]
+  reservations       Reservation[]
+  call_logs          CallLog[]
+
+  @@map("restaurants")
+}
+
+model OpeningHours {
+  id            String      @id @default(cuid())
+  restaurant_id String
+  day_of_week   Int // 0 = domingo … 6 = sábado
+  open_time     String // "HH:MM"
+  close_time    String // "HH:MM"
+  service_type  ServiceType @default(general)
+
+  restaurant Restaurant @relation(fields: [restaurant_id], references: [id], onDelete: Cascade)
+
+  @@index([restaurant_id, day_of_week])
+  @@map("opening_hours")
+}
+
+model AvailabilityRule {
+  id                           String      @id @default(cuid())
+  restaurant_id                String
+  day_of_week                  Int // 0 = domingo … 6 = sábado
+  service_type                 ServiceType
+  slot_time                    String // "HH:MM"
+  max_covers                   Int
+  max_party_size_auto_confirm  Int         @default(8)
+  reservation_duration_minutes Int         @default(90)
+
+  restaurant Restaurant @relation(fields: [restaurant_id], references: [id], onDelete: Cascade)
+
+  @@unique([restaurant_id, day_of_week, service_type, slot_time])
+  @@index([restaurant_id, day_of_week])
+  @@map("availability_rules")
+}
+
+model BlockedSlot {
+  id            String   @id @default(cuid())
+  restaurant_id String
+  date          String // "YYYY-MM-DD"
+  start_time    String? // null + end_time null = día completo bloqueado
+  end_time      String?
+  reason        String?
+  created_at    DateTime @default(now())
+
+  restaurant Restaurant @relation(fields: [restaurant_id], references: [id], onDelete: Cascade)
+
+  @@index([restaurant_id, date])
+  @@map("blocked_slots")
+}
+
+model Reservation {
+  id                     String             @id @default(cuid())
+  restaurant_id          String
+  customer_name          String
+  customer_phone         String
+  party_size             Int
+  date                   String // "YYYY-MM-DD" en la zona horaria del restaurante
+  time                   String // "HH:MM" franja asignada
+  status                 ReservationStatus  @default(pending)
+  notes                  String?
+  source                 ReservationSource  @default(phone_ai)
+  needs_review_reason    String?
+  idempotency_key        String?            @unique
+  calendar_event_id      String?
+  calendar_sync_status   CalendarSyncStatus @default(disabled)
+  calendar_sync_attempts Int                @default(0)
+  calendar_last_error    String?
+  created_at             DateTime           @default(now())
+  updated_at             DateTime           @updatedAt
+
+  restaurant Restaurant @relation(fields: [restaurant_id], references: [id], onDelete: Cascade)
+  call_logs  CallLog[]
+
+  @@index([restaurant_id, date, time])
+  @@index([restaurant_id, status])
+  @@index([restaurant_id, customer_phone])
+  @@index([calendar_sync_status, status])
+  @@map("reservations")
+}
+
+model CallLog {
+  id               String   @id @default(cuid())
+  restaurant_id    String
+  provider_call_id String?  @unique
+  caller_phone     String?
+  transcript       String?
+  extracted_intent String?
+  outcome          String? // completed | handoff | error | no_action …
+  tool_calls       Json     @default("[]")
+  reservation_id   String?
+  created_at       DateTime @default(now())
+  updated_at       DateTime @updatedAt
+
+  restaurant  Restaurant   @relation(fields: [restaurant_id], references: [id], onDelete: Cascade)
+  reservation Reservation? @relation(fields: [reservation_id], references: [id], onDelete: SetNull)
+
+  @@index([restaurant_id, created_at])
+  @@map("call_logs")
+}
+
+model AdminUser {
+  id            String   @id @default(cuid())
+  email         String   @unique
+  password_hash String
+  created_at    DateTime @default(now())
+
+  @@map("admin_users")
+}
