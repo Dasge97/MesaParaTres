@@ -1,5 +1,5 @@
 import type { FastifyPluginAsync } from 'fastify';
-import { availabilityCheckSchema } from '@recepcionista/shared';
+import { availabilityCheckSchema } from '@mesaparatres/shared';
 import { checkAvailabilityForRestaurant } from './service';
 
 export const availabilityRoutes: FastifyPluginAsync = async (app) => {

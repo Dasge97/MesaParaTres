@@ -1,5 +1,5 @@
 import type { FastifyPluginAsync } from 'fastify';
-import { requestHumanReviewToolInput } from '@recepcionista/shared';
+import { requestHumanReviewToolInput } from '@mesaparatres/shared';
 import { toolRequestHumanReview } from './service';
 
 /** POST /handoff: misma lógica que la tool request_human_review, vía panel/API admin. */

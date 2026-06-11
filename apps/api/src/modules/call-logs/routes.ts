@@ -1,5 +1,5 @@
 import type { FastifyPluginAsync } from 'fastify';
-import { callLogCreateSchema } from '@recepcionista/shared';
+import { callLogCreateSchema } from '@mesaparatres/shared';
 import { db } from '../../lib/db';
 
 export const callLogRoutes: FastifyPluginAsync = async (app) => {

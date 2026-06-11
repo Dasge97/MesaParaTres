@@ -1,5 +1,5 @@
 import type { FastifyPluginAsync } from 'fastify';
-import { availabilityRulesPutSchema, openingHoursPutSchema } from '@recepcionista/shared';
+import { availabilityRulesPutSchema, openingHoursPutSchema } from '@mesaparatres/shared';
 import { db } from '../../lib/db';
 import { NotFoundError, UnprocessableError } from '../../lib/errors';
 

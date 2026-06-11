@@ -1,5 +1,5 @@
 import type { Prisma, Reservation, Restaurant } from '@prisma/client';
-import type { ReservationSource, ReservationStatus } from '@recepcionista/shared';
+import type { ReservationSource, ReservationStatus } from '@mesaparatres/shared';
 import { db } from '../../lib/db';
 import { ConflictError, NotFoundError, UnprocessableError } from '../../lib/errors';
 import { normalizePhone } from '../../lib/phone';

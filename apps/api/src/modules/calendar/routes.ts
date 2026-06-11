@@ -1,5 +1,5 @@
 import type { FastifyPluginAsync } from 'fastify';
-import { calendarConnectSchema, calendarSyncRequestSchema } from '@recepcionista/shared';
+import { calendarConnectSchema, calendarSyncRequestSchema } from '@mesaparatres/shared';
 import { config, isGoogleConfigured } from '../../lib/config';
 import { db } from '../../lib/db';
 import { NotFoundError, UnprocessableError } from '../../lib/errors';

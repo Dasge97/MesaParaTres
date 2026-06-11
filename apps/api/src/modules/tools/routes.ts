@@ -6,7 +6,7 @@ import {
   checkAvailabilityToolInput,
   createReservationToolInput,
   requestHumanReviewToolInput,
-} from '@recepcionista/shared';
+} from '@mesaparatres/shared';
 import { config } from '../../lib/config';
 import { db } from '../../lib/db';
 import { notifyRestaurant } from '../notifications/notifier';

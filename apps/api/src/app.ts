@@ -10,6 +10,7 @@ import { availabilityRoutes } from './modules/availability/routes';
 import { blockedSlotRoutes } from './modules/blocked-slots/routes';
 import { callLogRoutes } from './modules/call-logs/routes';
 import { calendarRoutes } from './modules/calendar/routes';
+import { calendarViewRoutes } from './modules/calendar-view/routes';
 import { reservationRoutes } from './modules/reservations/routes';
 import { restaurantConfigRoutes } from './modules/restaurants/config-routes';
 import { restaurantRoutes } from './modules/restaurants/routes';
@@ -73,6 +74,8 @@ export async function buildApp() {
     await admin.register(availabilityRoutes);
     await admin.register(reservationRoutes);
     await admin.register(callLogRoutes);
+    await admin.register(calendarViewRoutes);
+    // Integración Google Calendar: fuera del MVP, queda dormida sin credenciales.
     await admin.register(calendarRoutes);
     await admin.register(handoffRoutes);
   });

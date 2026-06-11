@@ -9,7 +9,7 @@ import type {
   RequestHumanReviewToolInput,
   RequestHumanReviewToolOutput,
   ReservationStatus,
-} from '@recepcionista/shared';
+} from '@mesaparatres/shared';
 import { db } from '../../lib/db';
 import { ConflictError, NotFoundError, UnprocessableError } from '../../lib/errors';
 import { normalizePhone } from '../../lib/phone';

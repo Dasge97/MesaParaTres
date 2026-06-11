@@ -1,4 +1,4 @@
-import type { ReservationStatus } from '@recepcionista/shared';
+import type { ReservationStatus } from '@mesaparatres/shared';
 import { ConflictError } from '../../lib/errors';
 
 /**

@@ -1,6 +1,6 @@
 import type { FastifyPluginAsync } from 'fastify';
 import bcrypt from 'bcryptjs';
-import { loginSchema } from '@recepcionista/shared';
+import { loginSchema } from '@mesaparatres/shared';
 import { db } from '../../lib/db';
 import { AppError } from '../../lib/errors';
 

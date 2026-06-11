@@ -1,4 +1,4 @@
-import type { AvailabilityReason } from '@recepcionista/shared';
+import type { AvailabilityReason } from '@mesaparatres/shared';
 import { timeToMinutes } from '../../lib/time';
 
 /**

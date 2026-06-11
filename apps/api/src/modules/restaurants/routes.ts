@@ -1,5 +1,5 @@
 import type { FastifyPluginAsync } from 'fastify';
-import { restaurantCreateSchema, restaurantUpdateSchema } from '@recepcionista/shared';
+import { restaurantCreateSchema, restaurantUpdateSchema } from '@mesaparatres/shared';
 import { db } from '../../lib/db';
 import { NotFoundError } from '../../lib/errors';
 import { todayInTz } from '../../lib/time';

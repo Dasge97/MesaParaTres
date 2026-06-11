@@ -3,7 +3,7 @@ import {
   reservationCreateSchema,
   reservationListQuerySchema,
   reservationUpdateSchema,
-} from '@recepcionista/shared';
+} from '@mesaparatres/shared';
 import { db } from '../../lib/db';
 import { NotFoundError } from '../../lib/errors';
 import {

@@ -1,5 +1,5 @@
 import type { FastifyPluginAsync } from 'fastify';
-import { blockedSlotCreateSchema } from '@recepcionista/shared';
+import { blockedSlotCreateSchema } from '@mesaparatres/shared';
 import { db } from '../../lib/db';
 import { NotFoundError } from '../../lib/errors';
 

@@ -12,7 +12,7 @@ $ErrorActionPreference = 'Stop'
 
 # Deja la DB de dev limpia de datos transaccionales para que el script sea repetible.
 if ($Reset) {
-  docker exec recepcionista-pg psql -U postgres -d recepcionista -q -c `
+  docker exec mesaparatres-pg psql -U postgres -d mesaparatres -q -c `
     'DELETE FROM call_logs; DELETE FROM reservations; DELETE FROM blocked_slots;' | Out-Null
 }
 $results = @()
@@ -123,7 +123,15 @@ Check 'call log agrupa tool calls de la misma llamada' ($smoke1.tool_calls.Count
 $handoffLog = $logs | Where-Object { $_.outcome -eq 'handoff' }
 Check 'handoff registrado en call logs' ($handoffLog.Count -ge 1)
 
-# 15. Bloqueo de día completo
+# 15. Calendario interno: reservas + bloqueos como eventos
+$monday = $d.AddDays(-(([int]$d.DayOfWeek + 6) % 7)).ToString('yyyy-MM-dd')
+$sunday = $d.AddDays(6 - (([int]$d.DayOfWeek + 6) % 7)).ToString('yyyy-MM-dd')
+$cal = Invoke-RestMethod -Uri "$BaseUrl/calendar?restaurant_id=$rid&from=$monday&to=$sunday" -Headers $auth
+Check 'GET /calendar devuelve eventos de reserva' (($cal.events | Where-Object { $_.type -eq 'reservation' }).Count -ge 5)
+$ev = ($cal.events | Where-Object { $_.type -eq 'reservation' })[0]
+Check 'eventos con start/end ISO y datos de cliente' ([bool]$ev.start -and [bool]$ev.end -and [bool]$ev.customer_name)
+
+# 16. Bloqueo de día completo
 Invoke-RestMethod -Method Post -Uri "$BaseUrl/restaurants/$rid/blocked-slots" -Headers $auth -ContentType 'application/json' `
   -Body (@{ date = $friday; reason = 'smoke test' } | ConvertTo-Json) | Out-Null
 $blockedCheck = Invoke-RestMethod -Method Post -Uri "$BaseUrl/availability/check" -Headers $auth -ContentType 'application/json' -Body $body
